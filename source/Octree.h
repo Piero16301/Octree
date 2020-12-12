@@ -10,13 +10,23 @@ using namespace std;
 class Octree {
 private:
     Node* root;
-    vector<CImg<char>> arrayMat;
+    vector <CImg <char>> arrayMat;
+
+protected:
     static CImg <int> binarize(CImg <float> &img, int umbral);
+
+    bool isUniqueColor(Node* &oNode);
+
+    void insertRecursive(Node* &oNode);
+
 public:
     Octree();
 
     void loadImages();
+
     void showImages();
+
+    ~Octree();
 };
 
 

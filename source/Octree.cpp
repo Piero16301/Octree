@@ -27,20 +27,74 @@ CImg<int> Octree::binarize(CImg<float> &img, int umbral) {
     return R;
 }
 
+bool Octree::isUniqueColor(Node *&oNode) {
+    char firstColor = this->arrayMat[oNode->oct[2].first](oNode->oct[0].first,oNode->oct[1].first);
+    for (int i = oNode->oct[0].first; i <= oNode->oct[0].second; i++) {
+        for (int j = oNode->oct[1].first; j <= oNode->oct[1].second; j++) {
+            for (int k = oNode->oct[2].first; k <= oNode->oct[2].second; k++) {
+                if (this->arrayMat[k](i,j) != firstColor) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+void Octree::insertRecursive(Node *&oNode) {
+    if (oNode->oct[0].first == oNode->oct[0].second || oNode->oct[1].first == oNode->oct[1].second || oNode->oct[2].first == oNode->oct[2].second) {
+        //cout << "x: " << oNode->oct[0].first << ',' << oNode->oct[0].second << " y: " << oNode->oct[1].first << ',' << oNode->oct[1].second << " z: " << oNode->oct[2].first << ',' << oNode->oct[2].second << endl;
+        oNode->color = this->arrayMat[oNode->oct[2].first](oNode->oct[0].first,oNode->oct[1].first);
+        return;
+    }
+    if (isUniqueColor(oNode)) {
+        oNode->color = this->arrayMat[oNode->oct[2].first](oNode->oct[0].first,oNode->oct[1].first);
+        return;
+    }
+    int midX = (oNode->oct[0].second + oNode->oct[0].first) / 2;
+    int midY = (oNode->oct[1].second + oNode->oct[1].first) / 2;
+    int midZ = (oNode->oct[2].second + oNode->oct[2].first) / 2;
+    oNode->m_pSon[0] = new Node({oNode->oct[0].first,midX},{midY+1,oNode->oct[1].second},{midZ+1,oNode->oct[2].second});
+    oNode->m_pSon[1] = new Node({midX+1,oNode->oct[0].second},{midY+1,oNode->oct[1].second},{midZ+1,oNode->oct[2].second});
+    oNode->m_pSon[2] = new Node({oNode->oct[0].first,midX},{oNode->oct[1].first,midY},{midZ+1,oNode->oct[2].second});
+    oNode->m_pSon[3] = new Node({midX+1,oNode->oct[0].second},{oNode->oct[1].first,midY},{midZ+1,oNode->oct[2].second});
+
+    oNode->m_pSon[4] = new Node({oNode->oct[0].first,midX},{midY+1,oNode->oct[1].second},{oNode->oct[2].first,midZ});
+    oNode->m_pSon[5] = new Node({midX+1,oNode->oct[0].second},{midY+1,oNode->oct[1].second},{oNode->oct[2].first,midZ});
+    oNode->m_pSon[6] = new Node({oNode->oct[0].first,midX},{oNode->oct[1].first,midY},{oNode->oct[2].first,midZ});
+    oNode->m_pSon[7] = new Node({midX+1,oNode->oct[0].second},{oNode->oct[1].first,midY},{oNode->oct[2].first,midZ});
+    insertRecursive(oNode->m_pSon[0]);
+    insertRecursive(oNode->m_pSon[1]);
+    insertRecursive(oNode->m_pSon[2]);
+    insertRecursive(oNode->m_pSon[3]);
+    insertRecursive(oNode->m_pSon[4]);
+    insertRecursive(oNode->m_pSon[5]);
+    insertRecursive(oNode->m_pSon[6]);
+    insertRecursive(oNode->m_pSon[7]);
+}
+
 void Octree::loadImages() {
-    //system("find ../../images/paciente1/1 -type f -name \"*.BMP\" | sort > ../paciente1.txt");
+    system("find ../../images/paciente1/1 -type f -name \"*.BMP\" | sort > ../paciente1.txt");
     std::ifstream listFile("../paciente1.txt");
     std::string filePath;
     while (getline(listFile, filePath)) {
         cimg_library::CImg <float> A(filePath.c_str());
         CImg<char> R = binarize(A, 60);
-        //R.display();
         this->arrayMat.push_back(R);
     }
+    auto image = this->arrayMat[0];
+    this->root = new Node({0,image.width()-1},{0,image.height()-1},{0,this->arrayMat.size()-1});
+    insertRecursive(this->root);
 }
 
 void Octree::showImages() {
     for(const auto& image : arrayMat){
         image.display();
+    }
+}
+
+Octree::~Octree() {
+    if (this->root) {
+        this->root->killSelf();
     }
 }
