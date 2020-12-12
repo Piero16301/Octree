@@ -1,7 +1,8 @@
-#include "Octree.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
+
+#include "Octree.h"
 
 Octree::Octree() {
     this->root = nullptr;
@@ -85,6 +86,21 @@ void Octree::loadImages() {
     auto image = this->arrayMat[0];
     this->root = new Node({0,image.width()-1},{0,image.height()-1},{0,this->arrayMat.size()-1});
     insertRecursive(this->root);
+}
+
+CImg <char> Octree::getCut(const vector<int>& point1, const vector<int>& point2, const vector <int>& point3, const vector <int>& point4) {
+    CImg <char> R(512,512);
+    double intevalZ = ((double)(abs(point3[2] - point4[2])) / 512);
+    double counterZ = point4[2];
+    for (int i = 0; i < 512; i++) {
+        int zValue = (int)round(counterZ);
+        cout << "Nivel: " << zValue << endl;
+        for (int j = 0; j < 512; j++) {
+            R(i,j) = this->arrayMat[zValue](i,j);
+        }
+        counterZ += intevalZ;
+    }
+    return R;
 }
 
 void Octree::showImages() {
