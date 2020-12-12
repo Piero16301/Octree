@@ -1,13 +1,13 @@
+#include "Octree.h"
 #include <iostream>
-#include "CImg.h"
 #include <fstream>
 #include <vector>
-#include "Octree.h"
 
-using namespace cimg_library;
-using namespace std;
+Octree::Octree() {
+    this->root = nullptr;
+}
 
-CImg<char> binarize(CImg<float> &img, int umbral) {
+CImg<int> Octree::binarize(CImg<float> &img, int umbral) {
     CImg <char> R(img.width(),img.height());
     for(int i=0;i< img.width();i++) {
         for (int j = 0; j < img.height(); j++) {
@@ -27,21 +27,20 @@ CImg<char> binarize(CImg<float> &img, int umbral) {
     return R;
 }
 
-int main() {
-    /*
-    system("find ../../images/paciente1/1 -type f -name \"*.BMP\" | sort > ../paciente1.txt");
-    std::ifstream rutasInsert("../paciente1.txt");
-    std::string rutaInsert;
-    vector<CImg<char>> arrayMat;
-    while (getline(rutasInsert, rutaInsert)) {
-        cimg_library::CImg <float> A(rutaInsert.c_str());
+void Octree::loadImages() {
+    //system("find ../../images/paciente1/1 -type f -name \"*.BMP\" | sort > ../paciente1.txt");
+    std::ifstream listFile("../paciente1.txt");
+    std::string filePath;
+    while (getline(listFile, filePath)) {
+        cimg_library::CImg <float> A(filePath.c_str());
         CImg<char> R = binarize(A, 60);
         //R.display();
-        arrayMat.push_back(R);
+        this->arrayMat.push_back(R);
     }
-    */
-    Octree myoctree;
-    myoctree.loadImages();
-    myoctree.showImages();
-    return 0;
+}
+
+void Octree::showImages() {
+    for(const auto& image : arrayMat){
+        image.display();
+    }
 }
