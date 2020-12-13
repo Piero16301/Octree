@@ -103,6 +103,38 @@ CImg <char> Octree::getCut(const vector<int>& point1, const vector<int>& point2,
     return R;
 }
 
+void Octree::recreateRecursive(vector<CImg<char>> &arrayMatRebuilt, Node* &oNode) {
+    if(oNode->m_pSon[0] == nullptr){
+        // TODO: colorear Cubo en arrayMatRebuilt
+        for(int i = oNode->oct[0].first; i < oNode->oct[0].second; i++){ // Eje X
+            for(int j = oNode->oct[1].first; j < oNode->oct[1].second; j++){ // Eje Y
+                for(int k = oNode->oct[2].first; k < oNode->oct[2].second; k++){ // Eje Z
+                    arrayMatRebuilt[k](i, j) = oNode->color;
+                }
+            }
+        }
+        return;
+    }
+    for(auto & i: oNode->m_pSon){
+        recreateRecursive(arrayMatRebuilt, i);
+    }
+}
+
+void Octree::rebuildImagesFromOctree() {
+    vector <CImg <char>> arrayMatRebuilt;
+    CImg <char> R(512,512);
+    int numFilesZ = 40;
+    arrayMatRebuilt.reserve(numFilesZ);
+    for(int k = 0; k < numFilesZ; k++){
+        arrayMatRebuilt.push_back(R);
+    }
+    recreateRecursive(arrayMatRebuilt, this->root);
+    // Show rebuilt Images
+    for(const auto& image : arrayMatRebuilt){
+        image.display();
+    }
+}
+
 void Octree::showImages() {
     for(const auto& image : arrayMat){
         image.display();
