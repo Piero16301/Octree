@@ -123,9 +123,10 @@ void Octree::rebuildImagesFromOctree() {
     vector <CImg <char>> arrayMatRebuilt(40,CImg<char>(512,512));
     recreateRecursive(arrayMatRebuilt, this->root);
     // Show rebuilt Images
-    for(const auto& image : arrayMatRebuilt){
+    /*for(const auto& image : arrayMatRebuilt){
         image.display();
-    }
+    }*/
+    this->arrayMat = arrayMatRebuilt;
 }
 
 void Octree::showImages() {
