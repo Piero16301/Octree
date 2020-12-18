@@ -75,7 +75,7 @@ void Octree::insertRecursive(Node *&oNode) {
 }
 
 void Octree::loadImages() {
-    system("find ../../images/paciente1/1 -type f -name \"*.BMP\" | sort > ../paciente1.txt");
+    system("find ../../database/paciente1/1 -type f -name \"*.BMP\" | sort > ../paciente1.txt");
     std::ifstream listFile("../paciente1.txt");
     std::string filePath;
     while (getline(listFile, filePath)) {
@@ -126,7 +126,7 @@ void Octree::rebuildImagesFromOctree() {
     /*for(const auto& image : arrayMatRebuilt){
         image.display();
     }*/
-    this->arrayMat = arrayMatRebuilt;
+    //this->arrayMat = arrayMatRebuilt;
 }
 
 void Octree::showImages() {
