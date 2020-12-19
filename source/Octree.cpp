@@ -129,6 +129,42 @@ void Octree::rebuildImagesFromOctree() {
     this->arrayMat = arrayMatRebuilt;
 }
 
+void Octree::generateCutsX() {
+    int xPoint = 0;
+    while (xPoint < 512) {
+        CImg <char> frame(this->arrayMat[0].width(), this->arrayMat.size());
+        for (int i = 0; i < this->arrayMat[0].width(); i++) {
+            for (int j = 0; j < this->arrayMat.size(); j++) {
+                frame(i,j) = this->arrayMat[j](xPoint,i);
+            }
+        }
+        string path = "../../axis_cuts/axis_x/image" + to_string((xPoint+1)) + ".jpg";
+        frame.save(path.c_str());
+        xPoint++;
+    }
+    system("rm ../../axis_cuts/axis_x/video.avi ../../axis_cuts/axis_x.gif");
+    system("ffmpeg -f image2 -framerate 10 -i ../../axis_cuts/axis_x/image%d.jpg ../../axis_cuts/axis_x/video.avi");
+    system("ffmpeg -i ../../axis_cuts/axis_x/video.avi -pix_fmt rgb24 -loop 0 ../../axis_cuts/axis_x.gif");
+}
+
+void Octree::generateCutsY() {
+    int yPoint = 0;
+    while (yPoint < 512) {
+        CImg <char> frame(this->arrayMat[0].height(), this->arrayMat.size());
+        for (int i = 0; i < this->arrayMat[0].height(); i++) {
+            for (int j = 0; j < this->arrayMat.size(); j++) {
+                frame(i,j) = this->arrayMat[j](i,yPoint);
+            }
+        }
+        string path = "../../axis_cuts/axis_y/image" + to_string((yPoint+1)) + ".jpg";
+        frame.save(path.c_str());
+        yPoint++;
+    }
+    system("rm ../../axis_cuts/axis_y/video.avi ../../axis_cuts/axis_y.gif");
+    system("ffmpeg -f image2 -framerate 10 -i ../../axis_cuts/axis_y/image%d.jpg ../../axis_cuts/axis_y/video.avi");
+    system("ffmpeg -i ../../axis_cuts/axis_y/video.avi -pix_fmt rgb24 -loop 0 ../../axis_cuts/axis_y.gif");
+}
+
 void Octree::generateCutsZ() {
     int counter = 1;
     for (const auto& it : this->arrayMat) {
