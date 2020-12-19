@@ -19,7 +19,7 @@ CImg<int> Octree::binarize(CImg<float> &img, int umbral) {
             // Extrae color azul (posicion 2 de la 3ra dimension)
             int b = img(i, j, 2);
             if ((r + g + b) / 3 > umbral) {
-                R(i, j) = (char)1;
+                R(i, j) = (char)255;
             } else {
                 R(i, j) = (char)0;
             }
@@ -126,7 +126,18 @@ void Octree::rebuildImagesFromOctree() {
     /*for(const auto& image : arrayMatRebuilt){
         image.display();
     }*/
-    //this->arrayMat = arrayMatRebuilt;
+    this->arrayMat = arrayMatRebuilt;
+}
+
+void Octree::generateCutsZ() {
+    int counter = 1;
+    for (const auto& it : this->arrayMat) {
+        string path = "../../axis_cuts/axis_z/image" + to_string(counter++) + ".jpg";
+        it.save(path.c_str());
+    }
+    system("rm ../../axis_cuts/axis_z/video.avi ../../axis_cuts/axis_z.gif");
+    system("ffmpeg -f image2 -framerate 10 -i ../../axis_cuts/axis_z/image%d.jpg ../../axis_cuts/axis_z/video.avi");
+    system("ffmpeg -i ../../axis_cuts/axis_z/video.avi -pix_fmt rgb24 -loop 0 ../../axis_cuts/axis_z.gif");
 }
 
 void Octree::showImages() {
