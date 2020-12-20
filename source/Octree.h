@@ -24,7 +24,8 @@ protected:
 public:
     Octree();
     void loadImages();
-    CImg <char> getCut(const vector <int>& point1, const vector <int>& point2, const vector <int>& point3, const vector <int>& point4);
+    CImg <char> getCutX(const vector <int>& point1, const vector <int>& point2, const vector <int>& point3, const vector <int>& point4);
+    CImg <char> getPlaneAroundY(const vector <int>& point1, const vector <int>& point2, const vector <int>& point3, const vector <int>& point4);
     void rebuildImagesFromOctree();
     void generateCutsX();
     void generateCutsY();

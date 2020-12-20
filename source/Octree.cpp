@@ -19,7 +19,7 @@ CImg<int> Octree::binarize(CImg<float> &img, int umbral) {
             // Extrae color azul (posicion 2 de la 3ra dimension)
             int b = img(i, j, 2);
             if ((r + g + b) / 3 > umbral) {
-                R(i, j) = (char)255;
+                R(i, j) = (char)1;
             } else {
                 R(i, j) = (char)0;
             }
@@ -88,17 +88,24 @@ void Octree::loadImages() {
     insertRecursive(this->root);
 }
 
-CImg <char> Octree::getCut(const vector<int>& point1, const vector<int>& point2, const vector <int>& point3, const vector <int>& point4) {
-    CImg <char> R(512,512);
+CImg<char> Octree::getCutX(const vector<int> &point1, const vector<int> &point2, const vector<int> &point3, const vector<int> &point4) {
+    CImg <char> R;
+    return R;
+}
+
+CImg <char> Octree::getPlaneAroundY(const vector<int>& point1, const vector<int>& point2, const vector <int>& point3, const vector <int>& point4) {
+    CImg <char> R((point4[0]-point3[0]+1),(point1[1]-point3[1])+1);
     double intevalZ = ((double)(abs(point3[2] - point4[2])) / 512);
     double counterZ = point4[2];
-    for (int i = 0; i < 512; i++) {
+    for (int i = point3[0]; i <= point4[0]; i++) {
         int zValue = (int)round(counterZ);
         cout << "Nivel: " << zValue << endl;
-        for (int j = 0; j < 512; j++) {
-            R(i,j) = this->arrayMat[zValue](i,j);
+        int j_1 = 0;
+        for (int j = point3[1]; j <= point1[1]; j++) {
+            R(i,j_1) = this->arrayMat[zValue](i,j);
+            j_1++;
         }
-        counterZ += intevalZ;
+        counterZ += ((point3[2]-point4[2]>=0) ? intevalZ : intevalZ*-1);
     }
     return R;
 }
