@@ -7,7 +7,7 @@ int main() {
     myoctree.loadImages();
     //myoctree.showImages();
     //myoctree.rebuildImagesFromOctree();
-    //CImg <char> result = myoctree.getPlaneAroundY({0,199,39},{199,199,0},{0,0,39},{199,0,0});
+    //CImg <char> result = myoctree.getPlaneAroundY({148,396,36},{452,396,5},{148,8,36},{452,8,5});
     //result.save("../../test.jpeg");
     //myoctree.generateCutsX();
     //myoctree.generateCutsY();

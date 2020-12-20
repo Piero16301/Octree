@@ -97,15 +97,17 @@ CImg <char> Octree::getPlaneAroundY(const vector<int>& point1, const vector<int>
     CImg <char> R((point4[0]-point3[0]+1),(point1[1]-point3[1])+1);
     double intevalZ = ((double)(abs(point3[2] - point4[2])) / 512);
     double counterZ = point4[2];
+    int i_1 = 0;
     for (int i = point3[0]; i <= point4[0]; i++) {
         int zValue = (int)round(counterZ);
         cout << "Nivel: " << zValue << endl;
         int j_1 = 0;
         for (int j = point3[1]; j <= point1[1]; j++) {
-            R(i,j_1) = this->arrayMat[zValue](i,j);
+            R(i_1,j_1) = this->arrayMat[zValue](i,j);
             j_1++;
         }
         counterZ += ((point3[2]-point4[2]>=0) ? intevalZ : intevalZ*-1);
+        i_1++;
     }
     return R;
 }
@@ -192,6 +194,7 @@ void Octree::showImages() {
 void Octree::testRandomCuts(const int numCuts) {
     // Generar 4 puntos random
     srand (time(nullptr));
+    system("rm ../../testRandomResults/*.jpg");
     for(int i = 0; i < numCuts; i++){
         int xP1P3 = rand() % 200;
         int xP2P4 = rand() % 200 + 312;
@@ -199,8 +202,16 @@ void Octree::testRandomCuts(const int numCuts) {
         int yP3P4 = rand() % 200;
         int zP2P4 = rand() % 10;
         int zP1P3 = rand() % 10 + 30;
-        CImg <char> result = getPlaneAroundY({xP1P3, yP1P2, zP1P3}, {xP2P4, yP1P2, zP2P4}, {xP1P3, yP3P4, zP1P3}, {xP2P4, yP3P4, zP2P4});
-        string path = "../../testRandomResults/image_" + to_string((xP1P3)) + "-" + to_string((yP1P2)) + "-" + to_string((zP1P3)) + "_" + to_string((xP2P4)) + "-" + to_string((yP1P2)) + "-" + to_string((zP2P4)) + "_" + to_string((xP1P3)) + "-" + to_string((yP3P4)) + "-" + to_string((zP1P3)) + "_" + to_string((xP2P4)) + "-" + to_string((yP3P4)) + "-" + to_string((zP2P4)) + ".jpg";
+        CImg <char> result = getPlaneAroundY(
+                {xP1P3, yP1P2, zP1P3},
+                {xP2P4, yP1P2, zP2P4},
+                {xP1P3, yP3P4, zP1P3},
+                {xP2P4, yP3P4, zP2P4});
+        string path = "../../testRandomResults/image_" +
+                to_string((xP1P3)) + "-" + to_string((yP1P2)) + "-" + to_string((zP1P3)) + "_" +
+                to_string((xP2P4)) + "-" + to_string((yP1P2)) + "-" + to_string((zP2P4)) + "_" +
+                to_string((xP1P3)) + "-" + to_string((yP3P4)) + "-" + to_string((zP1P3)) + "_" +
+                to_string((xP2P4)) + "-" + to_string((yP3P4)) + "-" + to_string((zP2P4)) + ".jpg";
         result.save(path.c_str());
     }
 }
