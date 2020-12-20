@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
+#include <ctime>
 #include "Octree.h"
 
 Octree::Octree() {
@@ -19,7 +19,7 @@ CImg<int> Octree::binarize(CImg<float> &img, int umbral) {
             // Extrae color azul (posicion 2 de la 3ra dimension)
             int b = img(i, j, 2);
             if ((r + g + b) / 3 > umbral) {
-                R(i, j) = (char)1;
+                R(i, j) = (char)255;
             } else {
                 R(i, j) = (char)0;
             }
@@ -186,6 +186,22 @@ void Octree::generateCutsZ() {
 void Octree::showImages() {
     for(const auto& image : arrayMat){
         image.display();
+    }
+}
+
+void Octree::testRandomCuts(const int numCuts) {
+    // Generar 4 puntos random
+    srand (time(nullptr));
+    for(int i = 0; i < numCuts; i++){
+        int xP1P3 = rand() % 200;
+        int xP2P4 = rand() % 200 + 312;
+        int yP1P2 = rand() % 200 + 312;
+        int yP3P4 = rand() % 200;
+        int zP2P4 = rand() % 10;
+        int zP1P3 = rand() % 10 + 30;
+        CImg <char> result = getPlaneAroundY({xP1P3, yP1P2, zP1P3}, {xP2P4, yP1P2, zP2P4}, {xP1P3, yP3P4, zP1P3}, {xP2P4, yP3P4, zP2P4});
+        string path = "../../testRandomResults/image_" + to_string((xP1P3)) + "-" + to_string((yP1P2)) + "-" + to_string((zP1P3)) + "_" + to_string((xP2P4)) + "-" + to_string((yP1P2)) + "-" + to_string((zP2P4)) + "_" + to_string((xP1P3)) + "-" + to_string((yP3P4)) + "-" + to_string((zP1P3)) + "_" + to_string((xP2P4)) + "-" + to_string((yP3P4)) + "-" + to_string((zP2P4)) + ".jpg";
+        result.save(path.c_str());
     }
 }
 

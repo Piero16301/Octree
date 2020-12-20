@@ -31,6 +31,7 @@ public:
     void generateCutsY();
     void generateCutsZ();
     void showImages();
+    void testRandomCuts(const int numCuts);
 
     ~Octree();
 };
