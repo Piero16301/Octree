@@ -88,11 +88,6 @@ void Octree::loadImages() {
     insertRecursive(this->root);
 }
 
-CImg<char> Octree::getCutX(const vector<int> &point1, const vector<int> &point2, const vector<int> &point3, const vector<int> &point4) {
-    CImg <char> R;
-    return R;
-}
-
 CImg <char> Octree::getPlaneAroundY(const vector<int>& point1, const vector<int>& point2, const vector <int>& point3, const vector <int>& point4) {
     CImg <char> R((point4[0]-point3[0]+1),(point1[1]-point3[1])+1);
     double intevalZ = ((double)(abs(point3[2] - point4[2])) / 512);
