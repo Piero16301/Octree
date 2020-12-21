@@ -95,7 +95,7 @@ CImg <char> Octree::getPlaneAroundY(const vector<int>& point1, const vector<int>
     int i_1 = 0;
     for (int i = point3[0]; i <= point4[0]; i++) {
         int zValue = (int)round(counterZ);
-        cout << "Nivel: " << zValue << endl;
+        //cout << "Nivel: " << zValue << endl;
         int j_1 = 0;
         for (int j = point3[1]; j <= point1[1]; j++) {
             R(i_1,j_1) = this->arrayMat[zValue](i,j);
