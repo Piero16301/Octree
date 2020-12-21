@@ -20,17 +20,27 @@ protected:
     bool isUniqueColor(Node* &oNode);
     void insertRecursive(Node* &oNode);
     void recreateRecursive(vector <CImg <char>> &arrayMatRebuilt, Node* &oNode);
+    void memoryRecursive(unsigned long long &totalSize, Node* &oNode);
 
 public:
     Octree();
+
     void loadImages();
+
     CImg <char> getPlaneAroundY(const vector <int>& point1, const vector <int>& point2, const vector <int>& point3, const vector <int>& point4);
+
     void rebuildImagesFromOctree();
+
     void generateCutsX();
     void generateCutsY();
     void generateCutsZ();
+
     void showImages();
-    void testRandomCuts(const int numCuts);
+
+    void testRandomCuts(int numCuts);
+
+    unsigned long long getMemoryCube();
+    unsigned long long getMemoryOctree();
 
     ~Octree();
 };

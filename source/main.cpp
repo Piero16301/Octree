@@ -12,7 +12,9 @@ int main() {
     //myoctree.generateCutsX();
     //myoctree.generateCutsY();
     //myoctree.generateCutsZ();
-    myoctree.testRandomCuts(20);
+    //myoctree.testRandomCuts(20);
+    cout << "Memory usage cube: " << myoctree.getMemoryCube() << " bytes" << endl;
+    cout << "Memory usage octree: " << myoctree.getMemoryOctree() << " bytes" << endl;
     cout << "SUCCESSFULLY FINISHED" << endl;
     return 0;
 }

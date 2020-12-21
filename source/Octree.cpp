@@ -95,7 +95,6 @@ CImg <char> Octree::getPlaneAroundY(const vector<int>& point1, const vector<int>
     int i_1 = 0;
     for (int i = point3[0]; i <= point4[0]; i++) {
         int zValue = (int)round(counterZ);
-        //cout << "Nivel: " << zValue << endl;
         int j_1 = 0;
         for (int j = point3[1]; j <= point1[1]; j++) {
             R(i_1,j_1) = this->arrayMat[zValue](i,j);
@@ -120,6 +119,16 @@ void Octree::recreateRecursive(vector<CImg<char>> &arrayMatRebuilt, Node* &oNode
     }
     for (auto & i: oNode->m_pSon) {
         recreateRecursive(arrayMatRebuilt, i);
+    }
+}
+
+void Octree::memoryRecursive(unsigned long long &totalSize, Node* &oNode) {
+    if (oNode->m_pSon[0] == nullptr) {
+        totalSize += sizeof(Node);
+        return;
+    }
+    for (auto & i: oNode->m_pSon) {
+        memoryRecursive(totalSize, i);
     }
 }
 
@@ -186,7 +195,7 @@ void Octree::showImages() {
     }
 }
 
-void Octree::testRandomCuts(const int numCuts) {
+void Octree::testRandomCuts(int numCuts) {
     // Generar 4 puntos random
     srand (time(nullptr));
     system("rm ../../testRandomResults/*.jpg");
@@ -209,6 +218,20 @@ void Octree::testRandomCuts(const int numCuts) {
                 to_string((xP2P4)) + "-" + to_string((yP3P4)) + "-" + to_string((zP2P4)) + ".jpg";
         result.save(path.c_str());
     }
+}
+
+unsigned long long Octree::getMemoryCube() {
+    unsigned long long result = 0;
+    for (auto & i : this->arrayMat) {
+        result += i.size();
+    }
+    return result;
+}
+
+unsigned long long Octree::getMemoryOctree() {
+    unsigned long long result = 0;
+    memoryRecursive(result, this->root);
+    return result;
 }
 
 Octree::~Octree() {
