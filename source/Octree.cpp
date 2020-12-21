@@ -44,7 +44,6 @@ bool Octree::isUniqueColor(Node *&oNode) {
 
 void Octree::insertRecursive(Node *&oNode) {
     if (oNode->oct[0].first == oNode->oct[0].second || oNode->oct[1].first == oNode->oct[1].second || oNode->oct[2].first == oNode->oct[2].second) {
-        //cout << "x: " << oNode->oct[0].first << ',' << oNode->oct[0].second << " y: " << oNode->oct[1].first << ',' << oNode->oct[1].second << " z: " << oNode->oct[2].first << ',' << oNode->oct[2].second << endl;
         oNode->color = this->arrayMat[oNode->oct[2].first](oNode->oct[0].first,oNode->oct[1].first);
         return;
     }
@@ -135,10 +134,6 @@ void Octree::memoryRecursive(unsigned long long &totalSize, Node* &oNode) {
 void Octree::rebuildImagesFromOctree() {
     vector <CImg <char>> arrayMatRebuilt(40,CImg<char>(512,512));
     recreateRecursive(arrayMatRebuilt, this->root);
-    // Show rebuilt Images
-    /*for(const auto& image : arrayMatRebuilt){
-        image.display();
-    }*/
     this->arrayMat = arrayMatRebuilt;
 }
 
